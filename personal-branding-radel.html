@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal Branding Radella</title>
+
+  <!-- Google Fonts: Cormorant Garamond + DM Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* ============================================================
+       CSS CUSTOM PROPERTIES — Rose Quartz & Serenity Palette
+    ============================================================ */
+    :root {
+      --rose:        #F7CAC9;   /* Rose Quartz */
+      --serenity:    #92A8D1;   /* Serenity Blue */
+      --rose-deep:   #E8A5A3;
+      --serenity-deep: #6B8DBE;
+      --blush:       #FAE0DF;
+      --lavender:    #D4DCEE;
+      --cream:       #FDF6F0;
+      --text-dark:   #3D3240;
+      --text-mid:    #6B5F72;
+      --text-light:  #A096AA;
+      --white:       #FFFFFF;
+      --glass:       rgba(255,255,255,0.45);
+      --glass-border: rgba(255,255,255,0.65);
+      --shadow:      0 8px 32px rgba(146,168,209,0.18);
+      --shadow-hover: 0 16px 48px rgba(146,168,209,0.32);
+
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'DM Sans', sans-serif;
+
+      --nav-h: 70px;
+      --radius: 20px;
+      --radius-sm: 12px;
+      --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text-dark);
+      background: linear-gradient(135deg, var(--blush) 0%, var(--lavender) 50%, var(--rose) 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ============================================================
+       ANIMATED BACKGROUND CANVAS (floating particles)
+    ============================================================ */
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ============================================================
+       SCROLLBAR
+    ============================================================ */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--blush); }
+    ::-webkit-scrollbar-thumb { background: var(--serenity); border-radius: 3px; }
+
+    /* ============================================================
+       NAVIGATION
+    ============================================================ */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      z-index: 1000;
+      transition: background var(--transition), backdrop-filter var(--transition), box-shadow var(--transition);
+    }
+
+    /* Navbar scrolled state */
+    #navbar.scrolled {
+      background: rgba(253,246,240,0.82);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 2px 24px rgba(146,168,209,0.15);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.55rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--serenity-deep); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-mid);
+      letter-spacing: 0.04em;
+      position: relative;
+      transition: color var(--transition);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 2px;
+      background: linear-gradient(90deg, var(--rose-deep), var(--serenity));
+      border-radius: 1px;
+      transition: width var(--transition);
+    }
+
+    .nav-links a:hover { color: var(--text-dark); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--text-mid);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile nav drawer */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: var(--nav-h); left: 0; right: 0;
+      background: rgba(253,246,240,0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 1.5rem 5%;
+      z-index: 999;
+      box-shadow: 0 8px 24px rgba(146,168,209,0.15);
+      transform: translateY(-10px);
+      opacity: 0;
+      transition: all var(--transition);
+    }
+
+    .mobile-nav.open { display: block; transform: translateY(0); opacity: 1; }
+
+    .mobile-nav a {
+      display: block;
+      text-decoration: none;
+      color: var(--text-mid);
+      font-size: 1rem;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid rgba(146,168,209,0.15);
+      transition: color var(--transition);
+    }
+
+    .mobile-nav a:hover { color: var(--serenity-deep); }
+
+    /* ============================================================
+       GLASS CARD UTILITY
+    ============================================================ */
+    .glass-card {
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 2.5px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* ============================================================
+       SECTION WRAPPER
+    ============================================================ */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 90px 5% 70px;
+    }
+
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--serenity-deep);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 600;
+      color: var(--text-dark);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .section-sub {
+      font-size: 1rem;
+      color: var(--text-mid);
+      max-width: 560px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+
+    /* ============================================================
+       FADE-IN ANIMATION (triggered by IntersectionObserver)
+    ============================================================ */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* stagger children */
+    .stagger > * { transition-delay: calc(var(--i, 0) * 0.1s); }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.8rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-radius: 50px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all var(--transition);
+      letter-spacing: 0.03em;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--rose-deep), var(--serenity));
+      color: var(--white);
+      box-shadow: 0 4px 18px rgba(232,165,163,0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(232,165,163,0.55);
+    }
+
+    .btn-outline {
+      border-color: var(--serenity);
+      color: var(--serenity-deep);
+      background: transparent;
+    }
+
+    .btn-outline:hover {
+      background: var(--serenity);
+      color: var(--white);
+      transform: translateY(-2px);
+    }
+
+    /* ============================================================
+       HERO SECTION
+    ============================================================ */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: calc(var(--nav-h) + 40px);
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .hero-text { max-width: 560px; }
+
+    .hero-greeting {
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--serenity-deep);
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-name strong { font-weight: 600; color: var(--serenity-deep); }
+
+    /* Typing text */
+    .typing-wrap {
+      height: 2.2rem;
+      overflow: hidden;
+      margin-bottom: 1.2rem;
+    }
+
+    #typing-text {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--rose-deep);
+    }
+
+    #typing-cursor {
+      display: inline-block;
+      width: 2px; height: 1.2em;
+      background: var(--serenity-deep);
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: blink 0.9s step-end infinite;
+    }
+
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+
+    .hero-desc {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text-mid);
+      margin-bottom: 2rem;
+      max-width: 440px;
+    }
+
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    /* Photo side */
+    .hero-photo-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .photo-ring {
+      position: relative;
+      width: min(320px, 80vw);
+      height: min(320px, 80vw);
+    }
+
+    .photo-ring::before, .photo-ring::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid;
+      animation: spin 12s linear infinite;
+    }
+
+    .photo-ring::before {
+      inset: -14px;
+      border-color: var(--rose) transparent var(--serenity) transparent;
+    }
+
+    .photo-ring::after {
+      inset: -28px;
+      border-color: transparent var(--serenity-deep) transparent var(--rose-deep);
+      animation-duration: 20s;
+      animation-direction: reverse;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .photo-ring img {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--glass-border);
+      box-shadow: 0 12px 48px rgba(146,168,209,0.35);
+      display: block;
+    }
+
+    /* Placeholder avatar when no real photo */
+    .photo-placeholder {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      border: 4px solid var(--glass-border);
+      box-shadow: 0 12px 48px rgba(146,168,209,0.35);
+      background: linear-gradient(135deg, var(--rose), var(--lavender), var(--serenity));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-family: var(--font-display);
+    }
+
+    .photo-placeholder i { font-size: 4rem; margin-bottom: 0.5rem; opacity: 0.85; }
+    .photo-placeholder span { font-size: 1rem; letter-spacing: 0.05em; }
+
+    /* ============================================================
+       ABOUT SECTION
+    ============================================================ */
+    #about { background: transparent; }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .about-card {
+      padding: 2rem;
+    }
+
+    .about-card-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--rose), var(--serenity));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .about-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 0.6rem;
+    }
+
+    .about-card p, .about-card li {
+      font-size: 0.92rem;
+      line-height: 1.75;
+      color: var(--text-mid);
+    }
+
+    .about-card ul { list-style: none; }
+
+    .about-card li::before {
+      content: '✦ ';
+      color: var(--rose-deep);
+      font-size: 0.75rem;
+    }
+
+    /* Education timeline inside card */
+    .edu-item { padding: 0.4rem 0; }
+    .edu-item .edu-year { font-size: 0.78rem; color: var(--serenity-deep); font-weight: 600; letter-spacing: 0.05em; }
+    .edu-item .edu-name { font-size: 0.92rem; color: var(--text-dark); font-weight: 500; }
+    .edu-item .edu-place { font-size: 0.85rem; color: var(--text-mid); }
+    .edu-item + .edu-item { border-top: 1px solid rgba(146,168,209,0.2); margin-top: 0.4rem; }
+
+    /* ============================================================
+       SKILLS SECTION
+    ============================================================ */
+    #skills { background: transparent; }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .skill-group {
+      padding: 1.8rem;
+    }
+
+    .skill-group h3 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1.2rem;
+    }
+
+    .skill-item { margin-bottom: 1.1rem; }
+
+    .skill-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.4rem;
+    }
+
+    .skill-name { font-size: 0.88rem; color: var(--text-mid); font-weight: 500; }
+    .skill-pct  { font-size: 0.8rem;  color: var(--serenity-deep); font-weight: 600; }
+
+    .skill-bar-bg {
+      height: 7px;
+      background: rgba(146,168,209,0.2);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--rose-deep), var(--serenity));
+      width: 0;
+      transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================================
+       GALLERY / PORTFOLIO SECTION
+    ============================================================ */
+    #gallery { background: transparent; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .gallery-card {
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .gallery-thumb {
+      height: 180px;
+      background: linear-gradient(135deg, var(--rose), var(--lavender), var(--serenity));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+      border-radius: 14px 14px 0 0;
+    }
+
+    .gallery-thumb img{
+     width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .gallery-thumb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(61,50,64,0.35), transparent);
+    }
+
+    .gallery-tag {
+      position: absolute;
+      top: 12px; right: 12px;
+      background: var(--glass);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 0.72rem;
+      color: var(--text-dark);
+      z-index: 2;
+      font-weight: 500;
+    }
+
+    .gallery-body { padding: 1.2rem 1.4rem 1.4rem; }
+
+    .gallery-body h4 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 0.3rem;
+    }
+
+    .gallery-body p { font-size: 0.85rem; color: var(--text-mid); line-height: 1.6; }
+
+    .portfolio-btn{
+  display:inline-block;
+  margin-top:1rem;
+  padding:0.6rem 1.2rem;
+  border-radius:30px;
+  text-decoration:none;
+  font-size:0.85rem;
+  font-weight:500;
+  color:white;
+  background:linear-gradient(135deg,#E8A5A3,#92A8D1);
+  transition:0.3s ease;
+}
+
+.portfolio-btn:hover{
+  transform:translateY(-2px);
+  opacity:0.9;
+}
+
+    /* ============================================================
+       CV / RESUME SECTION
+    ============================================================ */
+    #cv { background: transparent; }
+
+    .cv-wrapper {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 2.5rem 2.8rem;
+    }
+
+    .cv-header {
+      text-align: center;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid rgba(146,168,209,0.25);
+      margin-bottom: 2rem;
+    }
+
+    .cv-header h2 {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .cv-header p { font-size: 0.9rem; color: var(--text-mid); margin-top: 0.3rem; }
+
+    .cv-contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem 2rem;
+      margin-top: 0.8rem;
+    }
+
+    .cv-contact-row a, .cv-contact-row span {
+      font-size: 0.83rem;
+      color: var(--serenity-deep);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .cv-section { margin-bottom: 1.8rem; }
+
+    .cv-section-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--serenity-deep);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-bottom: 1.5px solid rgba(146,168,209,0.3);
+      padding-bottom: 0.35rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .cv-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .cv-row-main .cv-org { font-weight: 600; font-size: 0.95rem; color: var(--text-dark); }
+    .cv-row-main .cv-role { font-size: 0.88rem; color: var(--text-mid); font-style: italic; }
+    .cv-row-year { font-size: 0.8rem; color: var(--serenity-deep); white-space: nowrap; font-weight: 500; }
+
+    .cv-bullets { list-style: none; padding-left: 0.5rem; }
+    .cv-bullets li { font-size: 0.85rem; color: var(--text-mid); line-height: 1.65; padding: 0.15rem 0; }
+    .cv-bullets li::before { content: '– '; color: var(--rose-deep); }
+
+    .cv-skills-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .cv-tag {
+      padding: 4px 14px;
+      background: rgba(146,168,209,0.15);
+      border: 1px solid rgba(146,168,209,0.3);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: var(--serenity-deep);
+    }
+
+    .cv-download-row { text-align: center; margin-top: 2rem; }
+
+    /* ============================================================
+       CONTACT SECTION
+    ============================================================ */
+    #contact { background: transparent; }
+
+    .contact-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .contact-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      justify-content: center;
+      margin-top: 2.5rem;
+    }
+
+    .contact-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 2.5rem;
+      text-decoration: none;
+      min-width: 160px;
+      gap: 0.6rem;
+      transition: all var(--transition);
+    }
+
+    .contact-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+
+    .contact-icon {
+      width: 54px; height: 54px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+    }
+
+    .contact-icon.ig  { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+    .contact-icon.em  { background: linear-gradient(135deg, var(--serenity-deep), var(--serenity)); }
+    .contact-icon.wa  { background: linear-gradient(135deg, #25D366, #128C7E); }
+
+    .contact-card span { font-size: 0.88rem; color: var(--text-mid); font-weight: 500; }
+    .contact-card strong { font-size: 0.78rem; color: var(--text-light); }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem 5%;
+      border-top: 1px solid rgba(146,168,209,0.2);
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(8px);
+    }
+
+    footer p { font-size: 0.83rem; color: var(--text-light); }
+    footer p span { color: var(--rose-deep); }
+    footer a { color: var(--serenity-deep); text-decoration: none; }
+
+    /* ============================================================
+       DIVIDER
+    ============================================================ */
+    .divider {
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, var(--rose-deep), var(--serenity));
+      border-radius: 2px;
+      margin: 0.8rem 0 2.5rem;
+    }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 768px) {
+      :root { --nav-h: 62px; }
+
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+
+      .hero-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 2.5rem;
+      }
+
+      .hero-desc { margin: 0 auto 2rem; }
+      .hero-btns { justify-content: center; }
+      .hero-photo-wrap { order: -1; }
+
+      .photo-ring { width: 220px; height: 220px; }
+
+      section { padding: 70px 5% 50px; }
+
+      .cv-wrapper { padding: 1.8rem 1.4rem; }
+      .cv-row { flex-direction: column; gap: 0.1rem; }
+      .cv-contact-row { flex-direction: column; align-items: center; }
+
+      .typing-wrap { height: auto; }
+    }
+
+    @media (max-width: 480px) {
+      .about-grid, .skills-grid, .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-card .glass-card { margin: 0; }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       PARTICLE BACKGROUND CANVAS
+  ============================================================ -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo">Rad<span>.</span></a>
+
+    <ul class="nav-links">
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#gallery">Portfolio</a></li>
+      <li><a href="#cv">CV</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile nav drawer -->
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#hero"    onclick="closeMobileNav()">Home</a>
+    <a href="#about"   onclick="closeMobileNav()">About Me</a>
+    <a href="#skills"  onclick="closeMobileNav()">Skills</a>
+    <a href="#gallery" onclick="closeMobileNav()">Portfolio</a>
+    <a href="#cv"      onclick="closeMobileNav()">CV</a>
+    <a href="#contact" onclick="closeMobileNav()">Contact</a>
+  </div>
+
+  <!-- ============================================================
+       HERO SECTION
+  ============================================================ -->
+  <section id="hero">
+    <div class="hero-inner">
+
+      <!-- Text -->
+      <div class="hero-text fade-in">
+        <p class="hero-greeting"><i class="fa-regular fa-hand-wave"></i> &nbsp;Hai, nama Saya</p>
+        <h1 class="hero-name">
+          Radella<br>
+          <strong>Alicia Rianto</strong>
+        </h1>
+
+        <!-- Typing text -->
+        <div class="typing-wrap">
+          <span id="typing-text"></span><span id="typing-cursor"></span>
+        </div>
+
+        <p class="hero-desc">
+          Saya merupakan siswi jurusan Sistem Informasi, Jaringan dan Aplikasi dari SMK N 7 Semarang dengan semangat belajar yang tinggi untuk meraih cita-cita yang diimpikan.
+        </p>
+
+        <div class="hero-btns">
+          <a href="#about" class="btn btn-primary">
+            <i class="fa-regular fa-user"></i> About Me
+          </a>
+          <a href="#contact" class="btn btn-outline">
+            <i class="fa-regular fa-envelope"></i> Contact
+          </a>
+        </div>
+      </div>
+
+      <!-- Photo -->
+      <div class="hero-photo-wrap fade-in" style="transition-delay:0.2s">
+        <div class="photo-ring">
+          <!--
+            Ganti <div class="photo-placeholder"> di bawah ini
+            dengan <img src="foto-kamu.jpg" alt="Putri Amelia"> untuk foto asli.
+          -->
+          <img src="foto-radel.jpeg" alt="Radella Alicia Rianto">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT ME SECTION
+  ============================================================ -->
+  <section id="about">
+    <p class="section-label fade-in">Kenali Lebih Dekat</p>
+    <h2 class="section-title fade-in">About Me</h2>
+    <div class="divider fade-in"></div>
+
+    <div class="about-grid stagger">
+
+      <!-- Keluarga -->
+      <div class="about-card glass-card fade-in" style="--i:0">
+        <div class="about-card-icon"><i class="fa-solid fa-house"></i></div>
+        <h3>Keluarga</h3>
+        <p>
+          Saya lahir di Semarang, 18 Januari 2009, sebagai anak tunggal.
+          Meskipun hidup sederhana, namun keluarga saya dipenuhi dengan cinta dan kasih sayang.
+        </p>
+      </div>
+
+      <!-- Pendidikan -->
+      <div class="about-card glass-card fade-in" style="--i:1">
+        <div class="about-card-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+        <h3>Pendidikan</h3>
+        <div class="edu-item">
+          <p class="edu-year">2024 – Sekarang</p>
+          <p class="edu-name">SMK Negeri 7 Semarang</p>
+          <p class="edu-place">Sistem Informasi, Jaringan dan Aplikasi</p>
+        </div>
+        <div class="edu-item">
+          <p class="edu-year">2021 – 2024</p>
+          <p class="edu-name">SMP Negeri 30 Semarang</p>
+        </div>
+        <div class="edu-item">
+          <p class="edu-year">2015 – 2021</p>
+          <p class="edu-name">SD Negeri Kalibanteng Kidul 03 Semarang</p>
+        </div>
+      </div>
+
+      <!-- Hobi -->
+      <div class="about-card glass-card fade-in" style="--i:2">
+        <div class="about-card-icon"><i class="fa-solid fa-palette"></i></div>
+        <h3>Hobi</h3>
+        <ul>
+          <li>Menulis fanfiction</li>
+          <li>Menonton film/series</li>
+          <li>Mendengarkan lagu</li>
+        </ul>
+      </div>
+
+      <!-- Minat -->
+      <div class="about-card glass-card fade-in" style="--i:3">
+        <div class="about-card-icon"><i class="fa-solid fa-star"></i></div>
+        <h3>Minat</h3>
+        <ul>
+          <li>Networking</li>
+          <li>Cybersecurity</li>
+          <li>Programming</li>
+        </ul>
+      </div>
+
+      <!-- Cita-cita -->
+      <div class="about-card glass-card fade-in" style="--i:4">
+        <div class="about-card-icon"><i class="fa-solid fa-rocket"></i></div>
+        <h3>Tujuan Karir</h3>
+        <p>
+          Saya bercita-cita menjadi seorang <em>Cyber Security Engineer</em> di suatu perusahaan atau badan pemerintahan.
+          Selain itu, saya juga akan tetap mengembangkan kemampuan menulis saya dengan cara menyambi menjadi penulis.
+        </p>
+      </div>
+
+      <!-- Kelebihan -->
+      <div class="about-card glass-card fade-in" style="--i:5">
+        <div class="about-card-icon"><i class="fa-solid fa-gem"></i></div>
+        <h3>Kelebihan Diri</h3>
+        <ul>
+          <li>Senang mempelajari hal baru</li>
+          <li>Suka berorganisasi</li>
+          <li>Dapat mengontrol emosi dengan tenang</li>
+          <li>Multibahasa</li>
+          <li>Copywriting</li>
+          <li>Graphic design</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SKILLS SECTION
+  ============================================================ -->
+  <section id="skills">
+    <p class="section-label fade-in">Kemampuan Saya</p>
+    <h2 class="section-title fade-in">Skills</h2>
+    <div class="divider fade-in"></div>
+
+    <div class="skills-grid">
+
+      <!-- Creative Skills -->
+      <div class="skill-group glass-card fade-in">
+        <h3><i class="fa-solid fa-pen-nib" style="color:var(--rose-deep);margin-right:.5rem"></i>Creative</h3>
+
+        <div class="skill-item">
+          <div class="skill-header">
+            <span class="skill-name">Writing Skills</span>
+            <span class="skill-pct">90%</span>
+          </div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="90"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-header">
+            <span class="skill-name">Networking (Cisco Packet Tracer/Routing)</span>
+            <span class="skill-pct">85%</span>
+          </div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="85"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-header">
+            <span class="skill-name">Basic HTML</span>
+            <span class="skill-pct">75%</span>
+          </div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="75"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-header">
+            <span class="skill-name">Basic CSS</span>
+            <span class="skill-pct">75%</span>
+          </div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="75"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-header">
+            <span class="skill-name">Leadership</span>
+            <span class="skill-pct">80%</span>
+          </div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="80"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       GALLERY / PORTFOLIO SECTION
+  ============================================================ -->
+  <section id="gallery">
+    <p class="section-label fade-in">Karya Saya</p>
+    <h2 class="section-title fade-in">Portfolio</h2>
+    <div class="divider fade-in"></div>
+
+    <div class="gallery-grid">
+
+      <div class="gallery-card glass-card fade-in">
+        <div class="gallery-thumb">
+          <img src="assets/iot.jpeg" alt="Smart Parking & Smart Clothesline">
+          <span class="gallery-tag">IoT</span>
+        </div>
+        <div class="gallery-body">
+          <h4>Smart Parking & Smart Clothesline</h4>
+          <p>Project Internet of Things (IoT).</p>
+        </div>
+      </div>
+
+      <div class="gallery-card glass-card fade-in">
+        <div class="gallery-thumb">
+          <img src="bittersweet.png" alt="BITTERSWEET">
+          <span class="gallery-tag">Writing</span>
+        </div>
+        <div class="gallery-body">
+          <h4>BITTERSWEET</h4>
+          <p>Karya tulis pertama saya yang berbentuk fanfiction. Diinspirasi dari lagu 'Bittersweet' - Wonwoo & Mingyu (SEVENTEEN).</p>
+          <a href="https://medium.com/@aurrachel/bittersweet-956de6a3b5d5"
+              target="_blank"
+              class="portfolio-btn">
+              View Project
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CV SECTION
+  ============================================================ -->
+  <section id="cv">
+    <p class="section-label fade-in">Resume Lengkap</p>
+    <h2 class="section-title fade-in">Curriculum Vitae (CV)</h2>
+    <div class="divider fade-in"></div>
+
+    <div class="cv-wrapper glass-card fade-in">
+
+      <!-- CV Header -->
+      <div class="cv-header">
+        <h2>Radella Alicia Rianto</h2>
+        <p>Sistem Informasi, Jaringan dan Aplikasi - SMK Negeri 7 Semaranh</p>
+        <div class="cv-contact-row">
+          <span><i class="fa-solid fa-location-dot"></i> Semarang, Jawa Tengah</span>
+          <a href="mailto:radellaalicia18@gmail.com"><i class="fa-solid fa-envelope"></i> radellaalicia18@gmail.com</a>
+          <a href="https://wa.me/6282216757063"><i class="fa-brands fa-whatsapp"></i> +62 822 1675 7063</a>
+          <a href="https://instagram.com/radellicious target="_blank"><i class="fa-brands fa-instagram"></i> @radellicious
+        </div>
+      </div>
+
+      <!-- Profil Singkat -->
+      <div class="cv-section">
+        <p class="cv-section-title">Profil</p>
+        <p style="font-size:.9rem;color:var(--text-mid);line-height:1.75">
+          Saya merupakan siswi jurusan Sistem Informasi, Jaringan dan Aplikasi dari SMK N 7 Semarang dengan semangat belajar yang tinggi untuk meraih cita-cita yang diimpikan. Saya memiliki minat di Sistem Keamanan Jaringan atau Cyber Security.
+        </p>
+      </div>
+
+      <!-- Pendidikan -->
+      <div class="cv-section">
+        <p class="cv-section-title">Pendidikan</p>
+        <div class="cv-row">
+          <div class="cv-row-main">
+            <p class="cv-org">SMK Negeri 7 Semarang</p>
+            <p class="cv-role">Sistem Informasi, Jaringan dan Aplikasi</p>
+          </div>
+          <span class="cv-row-year">2024 – Sekarang</span>
+        </div>
+        <div class="cv-row">
+          <div class="cv-row-main">
+            <p class="cv-org">SMP Negeri 30 Semarang</p>
+          </div>
+          <span class="cv-row-year">2021 – 2024</span>
+        </div>
+        <div class="cv-row">
+          <div class="cv-row-main">
+            <p class="cv-org">SD Negeri Kalibanteng Kidul 03 Semarang</p>
+          </div>
+          <span class="cv-row-year">2015 – 2021</span>
+        </div>
+      </div>
+
+      <!-- Pengalaman -->
+      <div class="cv-section">
+        <p class="cv-section-title">Pengalaman</p>
+
+        <div class="cv-row">
+          <div class="cv-row-main">
+            <p class="cv-org">Keorganisasian</p>
+            <p class="cv-role">Ketua Divisi Kebudayan SENAKA</p>
+          </div>
+          <span class="cv-row-year">2025 – Sekarang</span>
+        </div>
+
+        <div class="cv-row">
+          <div class="cv-row-main">
+            <p class="cv-org">Lomba</p>
+            <p class="cv-role">Peraih Medali Emas Diponegoro Short Olimpiad I Bidang Bahasa Inggris</p>
+          </div>
+          <span class="cv-row-year">2023</span>
+        </div>
+      </div>
+
+      <!-- Sertifikasi -->
+      <div class="cv-section">
+        <p class="cv-section-title">Sertifikasi</p>
+        <div class="cv-row"><div class="cv-row-main"><p class="cv-org">Sertifikat Hour of Code - Minecraft</p></div><span class="cv-row-year">2025</span></div>
+        <div class="cv-row"><div class="cv-row-main"><p class="cv-org">Sertifikat Peserta Lomba IONIC 2025</p></div><span class="cv-row-year">2025</span></div>
+        <div class="cv-row"><div class="cv-row-main"><p class="cv-org">Piagam Lomba Diponegoro Short Olimpiad 2023</p></div><span class="cv-row-year">2023</span></div>
+      </div>
+
+      <!-- Skills -->
+      <div class="cv-section">
+        <p class="cv-section-title">Keahlian</p>
+        <div class="cv-skills-tags">
+          <span class="cv-tag">Cisco Packet Tracer</span>
+          <span class="cv-tag">Networking (Routing)</span>
+          <span class="cv-tag">Canva</span>
+          <span class="cv-tag">Basic HTML</span>
+          <span class="cv-tag">Basic CSS</span>
+          <span class="cv-tag">Copywriting</span>
+          <span class="cv-tag">Leadership</span>
+        </div>
+      </div>
+
+      <!-- Bahasa -->
+      <div class="cv-section">
+        <p class="cv-section-title">Bahasa</p>
+        <div class="cv-row"><div class="cv-row-main"><p class="cv-org">Bahasa Indonesia</p></div><span class="cv-row-year">Native</span></div>
+        <div class="cv-row"><div class="cv-row-main"><p class="cv-org">Bahasa Inggris</p></div><span class="cv-row-year">Menengah ke Atas (B2)</span></div>
+        <div class="cv-row"><div class="cv-row-main"><p class="cv-org">Bahasa Korea</p></div><span class="cv-row-year">Basic</span></div>
+        <div class="cv-row"><div class="cv-row-main"><p class="cv-org">Bahasa Jerman</p></div><span class="cv-row-year">Basic</span></div>
+        <div class="cv-row"><div class="cv-row-main"><p class="cv-org">Bahasa Jepang</p></div><span class="cv-row-year">Basic</span></div>
+      </div>
+
+      <!-- Download button -->
+      <div class="cv-download-row">
+        <a href="#" class="btn btn-primary" onclick="alert('Silakan tambahkan link PDF CV Anda di sini!'); return false;">
+          <i class="fa-solid fa-download"></i> Download CV (PDF)
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT SECTION
+  ============================================================ -->
+  <section id="contact">
+    <div class="contact-inner">
+      <p class="section-label fade-in">Hubungi Saya</p>
+      <h2 class="section-title fade-in">Let's Connect</h2>
+      <div class="divider fade-in" style="margin:0.8rem auto 1.5rem"></div>
+      <p class="section-sub fade-in" style="margin:0 auto 0">
+        Saya selalu terbuka untuk kolaborasi, diskusi, maupun peluang baru.
+        Jangan ragu untuk menghubungi saya melalui platform berikut!
+      </p>
+
+      <div class="contact-cards">
+
+        <a href="https://instagram.com/radellicious" target="_blank" class="contact-card glass-card fade-in">
+          <div class="contact-icon ig"><i class="fa-brands fa-instagram"></i></div>
+          <span>Instagram</span>
+          <strong>@radellicious</strong>
+        </a>
+
+        <a href="mailto:radellaalicia18@gmail.com" class="contact-card glass-card fade-in">
+          <div class="contact-icon em"><i class="fa-solid fa-envelope"></i></div>
+          <span>Email</span>
+          <strong>radellaalicia18@gmail.com</strong>
+        </a>
+
+        <a href="https://wa.me/6282216757063" target="_blank" class="contact-card glass-card fade-in">
+          <div class="contact-icon wa"><i class="fa-brands fa-whatsapp"></i></div>
+          <span>WhatsApp</span>
+          <strong>+62 822 - 1675 - 7063</strong>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer>
+    <p>
+      Made with <span>♥</span> by
+      <a href="#hero">Radella Alicia Rianto</a>
+      &nbsp;·&nbsp; © 2025 All Rights Reserved
+    </p>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    /* ----------------------------------------------------------
+       1. PARTICLE CANVAS — floating soft dots
+    ---------------------------------------------------------- */
+    (function () {
+      const canvas = document.getElementById('particle-canvas');
+      const ctx    = canvas.getContext('2d');
+      let W, H, particles = [];
+
+      const COLORS = ['#F7CAC9','#92A8D1','#E8A5A3','#D4DCEE','#FAE0DF','#6B8DBE'];
+
+      function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+
+      function createParticle() {
+        return {
+          x:   Math.random() * W,
+          y:   Math.random() * H,
+          r:   Math.random() * 5 + 2,
+          vx:  (Math.random() - 0.5) * 0.45,
+          vy:  (Math.random() - 0.5) * 0.45,
+          alpha: Math.random() * 0.45 + 0.15,
+          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+          pulse: Math.random() * Math.PI * 2,  // phase offset
+        };
+      }
+
+      function init() {
+        resize();
+        particles = Array.from({ length: 90 }, createParticle);
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        particles.forEach(p => {
+          p.pulse += 0.008;
+          const scale = 1 + Math.sin(p.pulse) * 0.18;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r * scale, 0, Math.PI * 2);
+          ctx.fillStyle = p.color + Math.round(p.alpha * 255).toString(16).padStart(2,'0');
+          ctx.fill();
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          // wrap around edges
+          if (p.x < -10)  p.x = W + 10;
+          if (p.x > W+10) p.x = -10;
+          if (p.y < -10)  p.y = H + 10;
+          if (p.y > H+10) p.y = -10;
+        });
+
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', () => { resize(); });
+      init();
+      draw();
+    })();
+
+    /* ----------------------------------------------------------
+       2. NAVBAR — change style on scroll
+    ---------------------------------------------------------- */
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    /* ----------------------------------------------------------
+       3. HAMBURGER MENU
+    ---------------------------------------------------------- */
+    const hamburger  = document.getElementById('hamburger');
+    const mobileNav  = document.getElementById('mobile-nav');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileNav.classList.toggle('open');
+    });
+
+    function closeMobileNav() {
+      hamburger.classList.remove('open');
+      mobileNav.classList.remove('open');
+    }
+
+    /* ----------------------------------------------------------
+       4. TYPING TEXT EFFECT — hero slogan
+    ---------------------------------------------------------- */
+    (function () {
+      const el     = document.getElementById('typing-text');
+      const phrases = [
+        'Growing, learning, and becoming better every day.',
+        'Future Cyber Security Engineer.',
+      ];
+      let phraseIdx = 0, charIdx = 0, deleting = false;
+
+      function type() {
+        const phrase = phrases[phraseIdx];
+        if (!deleting) {
+          el.textContent = phrase.slice(0, ++charIdx);
+          if (charIdx === phrase.length) {
+            deleting = true;
+            setTimeout(type, 1800);
+            return;
+          }
+        } else {
+          el.textContent = phrase.slice(0, --charIdx);
+          if (charIdx === 0) {
+            deleting = false;
+            phraseIdx = (phraseIdx + 1) % phrases.length;
+          }
+        }
+        setTimeout(type, deleting ? 55 : 90);
+      }
+      type();
+    })();
+
+    /* ----------------------------------------------------------
+       5. FADE-IN on scroll (IntersectionObserver)
+    ---------------------------------------------------------- */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    /* ----------------------------------------------------------
+       6. SKILL BAR ANIMATION — trigger when visible
+    ---------------------------------------------------------- */
+    const barObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+            const pct = bar.dataset.pct;
+            // small timeout so CSS transition fires after paint
+            setTimeout(() => { bar.style.width = pct + '%'; }, 150);
+          });
+          barObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.skill-group').forEach(g => barObserver.observe(g));
+
+    /* ----------------------------------------------------------
+       7. SMOOTH SCROLL for any anchor links not handled by CSS
+    ---------------------------------------------------------- */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          const offsetTop = target.getBoundingClientRect().top + window.scrollY - 72;
+          window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+        }
+      });
+    });
+
+  </script>
+
+</body>
+</html>
